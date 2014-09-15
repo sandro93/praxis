@@ -1,0 +1,45 @@
+putc is usually the best function to use for writing a single
+character. 
+putchar 
+fputs
+puts writes out to stdout, adds newline. o
+puts is the most convenient function for writing simple messages. 
+
+Character input
+
+
+* Line-Oriented Input
+
+A nonstandard /getline/ function makes it easy to read lines
+reliably. 
+
+Another Gnu extension getdelim generalizes getline, it reads a
+delimited record defined as everything through the next occurence of
+a specified delimiter character. 
+
+     #+BEGIN_EXAMPLE
+     size_t getline(**lineptr, size_t *n, FILE *stream)
+     #+END_EXAMPLE
+
+This function reads an entire line from /stream/, storing the text
+(including a newline and a terminating null character in a buffer
+and storing the buffer address in *lineptr. 
+
+     Before calling `getline', you should place in `*LINEPTR' the
+     address of a buffer `*N' bytes long, allocated with `malloc'.  If
+     this buffer is long enough to hold the line, `getline' stores the
+     line in this buffer.  Otherwise, `getline' makes the buffer bigger
+     using `realloc', storing the new buffer address back in `*LINEPTR'
+     and the increased size back in `*N'.  *Note Unconstrained
+     Allocation::.
+
+* The things I still have to learn about C
+
+- function pointers. I know how they work, I know how to use them. I
+  just have to - use them.
+  return_type (*var_name) (param_types)
+
+- variadic functions.
+
+
+

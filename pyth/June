@@ -1,0 +1,10 @@
+28 June 2012
+
+I have started writing a simple backup program. It just serves me as a
+practice for the modules datetime, argparse, tarfile... You open a tar
+file, you add files to it, and close it. 
+
+date = datetime.date.today()
+archivename = archivename = '.'.join((date.strftime("%B-%d-%y"),'tar.bz2'))
+
+print("{0}".format("Gnu"), file=sys.stderr)

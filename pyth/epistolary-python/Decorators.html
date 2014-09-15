@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+<title>Decorators - Epistolary Python</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Epistolary Python">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Parsing-Command_002dline-Arguments.html#Parsing-Command_002dline-Arguments" title="Parsing Command-line Arguments">
+<link rel="next" href="Closures-and-Generators.html#Closures-and-Generators" title="Closures and Generators">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This is a collection of the notes I take and the sample code I read or
+think about while learning Python. It may grow to anything, as long as
+I keep improving it.
+
+-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Decorators"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Closures-and-Generators.html#Closures-and-Generators">Closures and Generators</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Parsing-Command_002dline-Arguments.html#Parsing-Command_002dline-Arguments">Parsing Command-line Arguments</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<h2 class="chapter">2 Decorators</h2>
+
+<p>What I have learned today about decorators in python.
+
+   <p>You have to define a function which wraps the other function, that is,
+it takes it as an argument, constructs a new function and then
+returns. The syntax for actual wrapping is as follows:
+<pre class="example">     # A decorator function
+     def trace(f):
+         def helper(x):
+         	print("calling {0} for {1}".format(f.__name__, x)
+     	result = f(x)
+     	return result
+         return helper
+</pre>
+   <p># The function you want to be decorated
+<code>
+@trace
+def square(x):
+    return x * x
+</code>
+
+   <p>There is some more I could read about the decorators, but I do not
+feel like it. It must be quite useful though, to decorate the
+functions using the classes, that would help you to call decorators
+with arguments which apply to them, not to the function being
+decorated. Also, that way you can send more than one positional
+arguments to the function being called.
+
+   </body></html>
+
