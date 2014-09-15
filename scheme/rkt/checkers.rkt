@@ -32,4 +32,4 @@
 
 (series (lambda (size) (checkboard (square size))))
 
-(provide series)
+(provide series square)

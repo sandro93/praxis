@@ -1,0 +1,5 @@
+#lang racket
+
+(require (planet schematics/random:1:0/random))
+
+(random-gaussian)
