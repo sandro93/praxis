@@ -1,0 +1,60 @@
+
+raad.c,219
+#define WINDOW_TITLE 3,19
+#define WINDOW_WIDTH 4,64
+#define WINDOW_HEIGHT 5,89
+int running 7,116
+const char *help help9,134
+int main(11,165
+void loadGame(47,1016
+void handleEvents(81,1851
+void render(140,3194
+
+texture.c,77
+int loadTexture(3,19
+void drawTexture(19,464
+void drawTextureFrame(34,867
+
+vector.c,124
+Vector add(3,21
+Vector subtract(10,128
+Vector multByScalar(17,240
+Vector divideByScalar(23,334
+Vector normalize(29,430
+
+ledge.h,70
+  int x;2,16
+  int y;3,25
+  int w;4,34
+  int h;5,43
+} Ledge;6,52
+
+raad.h,416
+  Vector position;14,222
+  Vector velocity;15,241
+  Vector acceleration;16,260
+  short life;17,283
+  int currentFrame;18,297
+  int currentRow;19,317
+  SDL_Texture* texture;20,335
+} Runner;21,359
+  Runner man;24,386
+  Raven ravens[ravens25,400
+  Ledge ledges[ledges26,420
+  SDL_Texture *raven;raven27,441
+  SDL_Texture *brick;brick28,463
+  SDL_Renderer *renderer;renderer30,486
+} GameState;31,512
+
+raven.h,42
+  int x;2,17
+  int y;3,26
+} Raven;4,35
+
+vector.h,67
+#define length(1,0
+  float x;4,65
+  float y;5,76
+} Vector;6,87
+
+texture.h,0
