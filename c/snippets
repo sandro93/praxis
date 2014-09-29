@@ -1,0 +1,1064 @@
+
+  Snippets
+
+
+      From C
+
+Jump to: navigation <#column-one>, search <#searchInput>
+
+
+    Contents
+
+[hide <javascript:toggleToc()>]
+
+  * 1 Code Snippets <#Code_Snippets>
+      o 1.1 Standard I/O <#Standard_I.2FO>
+          + 1.1.1 character input functions return int, not char
+            <#character_input_functions_return_int.2C_not_char>
+          + 1.1.2 be mindful of operator precedence
+            <#be_mindful_of_operator_precedence>
+          + 1.1.3 reading a line from a stream without artificial limits
+            <#reading_a_line_from_a_stream_without_artificial_limits>
+          + 1.1.4 the <ctype.h> is* and to* functions require an
+            unsigned char or EOF
+            <#the_.3Cctype.h.3E_is.2A_and_to.2A_functions_require_an_unsigned_char_or_EOF>
+          + 1.1.5 gets is not safe <#gets_is_not_safe>
+      o 1.2 Datastructures/Algorithms <#Datastructures.2FAlgorithms>
+          + 1.2.1 Linked Lists <#Linked_Lists>
+              # 1.2.1.1 Defining a structure that has a pointer member
+                to its own type
+                <#Defining_a_structure_that_has_a_pointer_member_to_its_own_type>
+              # 1.2.1.2 Type aliases (typedef's) do not exist until the
+                closing semi-colon
+                <#Type_aliases_.28typedef.27s.29_do_not_exist_until_the_closing_semi-colon>
+          + 1.2.2 Stacks <#Stacks>
+              # 1.2.2.1 Ancient stack idioms <#Ancient_stack_idioms>
+          + 1.2.3 Random Stuff <#Random_Stuff>
+              # 1.2.3.1 Ranged Random Number <#Ranged_Random_Number>
+      o 1.3 Threads <#Threads>
+          + 1.3.1 POSIX Threads <#POSIX_Threads>
+              # 1.3.1.1 Compilation <#Compilation>
+              # 1.3.1.2 Thread Creation <#Thread_Creation>
+              # 1.3.1.3 Thread Cancelation <#Thread_Cancelation>
+              # 1.3.1.4 Thread Exit & Join <#Thread_Exit_.26_Join>
+              # 1.3.1.5 Thread Syncronization with Mutexes
+                <#Thread_Syncronization_with_Mutexes>
+              # 1.3.1.6 Thread Syncronization with Mutexes and Condition
+                Variables
+                <#Thread_Syncronization_with_Mutexes_and_Condition_Variables>
+              # 1.3.1.7 Additional Documentation and tutorials
+                <#Additional_Documentation_and_tutorials>
+      o 1.4 Sockets <#Sockets>
+      o 1.5 Conversions <#Conversions>
+          + 1.5.1 Integer to bitstring <#Integer_to_bitstring>
+          + 1.5.2 Detecting data format problems with strtol
+            <#Detecting_data_format_problems_with_strtol>
+          + 1.5.3 How much room do I need? <#How_much_room_do_I_need.3F>
+          + 1.5.4 More on this topic <#More_on_this_topic>
+      o 1.6 Strings <#Strings>
+      o 1.7 Debugging <#Debugging>
+          + 1.7.1 Getting a backtrace on Linux
+            <#Getting_a_backtrace_on_Linux>
+      o 1.8 Preprocessor <#Preprocessor>
+          + 1.8.1 Turning symbols into strings
+            <#Turning_symbols_into_strings>
+          + 1.8.2 CONCAT <#CONCAT>
+          + 1.8.3 String concatination <#String_concatination>
+      o 1.9 Sharing values between translation units
+        <#Sharing_values_between_translation_units>
+      o 1.10 Allocating dynamic objects <#Allocating_dynamic_objects>
+      o 1.11 Sleeping <#Sleeping>
+      o 1.12 Copy a substring <#Copy_a_substring>
+      o 1.13 File* IO on large files (posix only)
+        <#File.2A_IO_on_large_files_.28posix_only.29>
+      o 1.14 Term[win] Dimensions <#Term.5Bwin.5D_Dimensions>
+
+
+    Code Snippets
+
+Small code snippet, examples for common problems etc. should be linked
+here under the appropriate sections.
+
+The Usenet </wiki/Usenet> section contains links to useful articles.
+
+
+      Standard I/O
+
+
+        character input functions return int, not char
+
+ /* this is a non-working example */
+ char c;
+ while ((c = getchar()) != EOF) { ... }
+
+The reason character input functions such as getchar return an int value
+is so that EOF can be represented outside of the otherwise valid range
+of characters. When this return value is assigned to a char variable,
+the EOF value (some negative value, often -1) is forced into the range
+of char thus making it impossible to distinguish between that character
+and an EOF indication.
+
+
+        be mindful of operator precedence
+
+ /* this is a non-working example */
+ int c;
+ while (c = getchar() == EOF) { ... }
+
+Due to precedence </wiki/Precedence>, the value assigned to c is the
+result of the comparison of the return value of getchar and EOF, rather
+than a copy of the character read.
+
+
+
+        reading a line from a stream without artificial limits
+
+A number of people have written these sorts of things, here are a few:
+
+  * James Antill's vstr: http://www.and.org/vstr
+  * CBFalconer's ggets: http://cbfalconer.home.att.net/download/ggets.zip
+  * Richard Heathfield's fgetline:
+    http://www.cpax.org.uk/prg/writings/fgetdata.php
+  * Brandon's GNU getline() clone:
+    http://sfexplore.com/~bniemczyk/?page=getline_script
+  * rfgets </wiki/Rfgets> 
+
+Some platforms supply them as part of their standard(ish) library:
+
+  * (Free|Net|Open)BSD have fgetln:
+    http://www.FreeBSD.org/cgi/man.cgi?query=fgetln
+  * GNU Libc has getline, which was standardized in POSIX.1-2008:
+    http://pubs.opengroup.org/onlinepubs/9699919799/functions/getline.html
+    http://www.gnu.org/software/libc/manual/html_node/Line-Input.html 
+
+
+        the <ctype.h> is* and to* functions require an unsigned char or EOF
+
+The is* and to* functions require their argument to be an unsigned char
+as an int, or the EOF value. Sometimes this is what you already have,
+e.g., the return value from getchar:
+
+ int c = tolower(getchar());
+
+But if the character has been assigned to a char, say as part of a
+string, then suddenly it's not necessarily true that you have a value in
+the range [0,UCHAR_MAX] because char may be a signed type. So while it's
+tempting to write:
+
+ /* this is a non-working example */
+ void lower_case(char *s)
+ {
+   while (*s)
+   {
+     *s = tolower(*s);
+     s++;
+   }
+ }
+
+this is flawed and can have undefined behavior if char is signed and any
+of those bytes are outside the range [0,CHAR_MAX], as will often be the
+case with 'national characters'. This is one of the (few) cases where
+one should cast; in fact it can be argued that a cast here is required
+(see also Casting </wiki/Casting> and Richard_Heathfield
+</wiki/Usenet#Richard_Heathfield>'s article on casting
+<http://www.cpax.org.uk/prg/writings/casting.php>):
+
+ void lower_case(char *s)
+ {
+   while (*s)
+   {
+     *s = tolower((unsigned char)*s);
+     s++;
+   }
+ }
+
+
+        gets is not safe
+
+ char line[80];
+ if (0 != gets(line)) { ... }
+
+This is unsafe, because gets has no way to know the size of the buffer,
+line, so it can keep reading and storing bytes well past the end of the
+storage available. Please do not use it, even in your classwork.
+
+One replacement is fgets:
+
+ char line[80];
+ if (0 != fgets(line, sizeof line, stdin)) { ... }
+
+The return values possible are the same and have the same meanings, but
+fgets leaves the newline character in the buffer if it is read, so that
+you can determine if the entire line was in fact collected.
+
+For more information on this subject see Richard Heathfield's page on
+Reading Data in C <http://www.cpax.org.uk/prg/writings/fgetdata.php>.
+
+
+      Datastructures/Algorithms
+
+
+        Linked Lists
+
+
+          Defining a structure that has a pointer member to its own type
+
+struct item {
+  int id;
+  char *name;
+  struct item *next;
+};
+
+Or
+
+typedef struct item item;
+struct item {
+  int id;
+  char *name;
+  item *next;
+};
+
+Be Advised: Most folks really, REALLY do not like the struct name masked
+by the typedef name. A far better alternative would be:
+
+typedef struct item_ 
+{
+  int id;
+  char *name;
+  struct item_ *next;
+} item;
+/* or using case, to differenciate "defined types" */
+typedef struct item
+{
+  int id;
+  char *name;
+  struct item *next;
+} Item;
+static Item *item = foo;
+
+
+          Type aliases (typedef's) do not exist until the closing semi-colon
+
+/* this is a non-working example */
+typedef struct {
+  int id;
+  char *name;
+  item *next;
+} item;
+
+
+this fails to compile -- if it compiles you aren't compiling c, more
+likely you've got yourself some c++, so be careful of sharp corners --
+here's why: 'item' is not an alias until after the semi-colon, thus
+within the struct body it is unknown so is a syntax error. the same for
+unions.
+
+in fact the struct tagged 'item' isn't defined until after the
+semi-colon either, but all struct pointers have the same representation
+and are compatible, further you can create a pointer to an incomplete
+type (just don't dereference it).
+
+in addition to the previous examples the following also works:
+
+typedef struct item_ {
+  int id;
+  char *name;
+  struct item_ *next;
+} item;
+
+
+        Stacks
+
+
+          Ancient stack idioms
+
+/* push */
+*stackptr++ = item;
+
+/* pop */
+item = *--stackptr;
+
+
+        Random Stuff
+
+
+          Ranged Random Number
+
+In Numerical Recipes in C: The Art of Scientific Computing (William H.
+Press, Brian P. Flannery, Saul A. Teukolsky, William T. Vetterling; New
+York: Cambridge University Press, 1992 (2nd ed., p. 277)), the following
+comments are made:
+
+If you want to generate a random integer between 1 and 10, you should always do it by using high-order bits, as in
+
+j=1+(int) (10.0*rand()/(RAND_MAX+1.0));
+
+and never by anything resembling
+
+j=1+(rand() % 10);
+
+(which uses lower-order bits).
+
+To yield a pseudo-random number in a [min,max] range:
+
+unsigned int randr(unsigned int min, unsigned int max)
+{
+    double scaled = rand() / (RAND_MAX + 1.0);
+    return (max - min + 1) * scaled + min;
+}
+
+See also comp.lang.c FAQ Question 13.16
+<http://www.c-faq.com/lib/randrange.html>
+
+
+      Threads
+
+
+        POSIX Threads
+
+Threads are system objects similar to processes. They execute code and
+have own stack. However they share memory and file descriptors with the
+other threads inside a process. That's why, they're sometimes called
+/lightweight processes/. Most operating systems have thread
+implementation based on the popular POSIX standard. It is usually a
+library, called *POSIX Threads* or *pthread*.
+
+
+          Compilation
+
+Linux or Mac OS X:
+
+gcc -g -Wall -o pthread_example pthread_example.c -lpthread
+
+FreeBSD:
+
+gcc -g -Wall -o pthread_example pthread_example.c -pthread
+
+
+          Thread Creation
+
+#include <stdio.h>
+#include <pthread.h> /* POSIX Threads Library */
+
+/* Simple thread Body */
+void *thread_body(void *data)
+{
+	int my_data = *((int *)data);
+	
+	while(1)
+	{
+		printf("Hello world !!! This is a sample thread and you send me data %d\n", my_data);
+	}
+}
+
+int main(void)
+{
+	pthread_t t; /* Thread handler */
+	int i;
+	int data = 10;
+
+        /* New thread */
+	if((i = pthread_create(&t, NULL, thread_body, (void *)&data)) != 0)
+	{
+		printf("pthread_create() error\n");
+		return -1;
+	}
+	
+	while(1)
+	{
+		printf("This is main thread\n");
+	}
+
+	return 0;
+}
+
+
+          Thread Cancelation
+
+#include <stdio.h>
+#include <pthread.h> /* POSIX Threads Library */
+
+/* Simple thread Body */
+void *thread_body(void *data)
+{
+	int my_data = *((int *)data);
+	
+	while(1)
+	{
+		printf("Hello world !!! This is a sample thread and you send me data %d\n", my_data);
+	}
+}
+
+int main(void)
+{
+	pthread_t t; /* Thread handler */
+	int i;
+	int data = 10;
+
+	/* New thread */
+	if((i = pthread_create(&t, NULL, thread_body, (void *)&data)) != 0)
+	{
+		printf("pthread_create() error\n");
+		return -1;
+	}
+	
+	/* Giving our thread some time before cancel ... */
+	sleep(3);
+
+	/* Canceling thread */
+	if((i = pthread_cancel(t)) != 0)
+	{
+		printf("pthread_cancel() error\n");
+		return -1;
+	}	
+	
+	return 0;
+}
+
+
+          Thread Exit & Join
+
+#include <stdio.h>
+#include <pthread.h> /* POSIX Threads Library */
+
+/* Simple thread Body */
+void *thread_body(void *data)
+{
+	int i = 0;
+	int my_data = *((int *)data);
+	
+	for(i = 0; i <= 10; i++)
+	{
+		printf("Hello world !!! This is a sample thread and you send me data %d\n", my_data);
+	}
+	
+	/* Exiting with return value */
+	pthread_exit((void *)&i);
+}
+
+int main(void)
+{
+	pthread_t t; /* Thread handler */
+	int i;
+	int data = 10;
+	int *ret;
+
+	/* New thread */
+	if((i = pthread_create(&t, NULL, thread_body, (void *)&data)) != 0)
+	{
+		printf("pthread_create() error\n");
+		return -1;
+	}
+	
+	/* Giving our thread some time ... */
+	sleep(3);
+
+	/* "Joining" our already exited thread */
+	if((i = pthread_join(t, (void *)&ret)) != 0)
+	{
+		printf("pthread_join() error\n");
+		return -1;
+	}	
+	
+	printf("Our thread returned: %d\n", *ret);
+	
+	return 0;
+}
+
+
+          Thread Syncronization with Mutexes
+
+#include <stdio.h>
+#include <pthread.h> /* POSIX Threads Library */
+
+/* Synchronization Mutex */
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/* Global Variable, shared between threads */
+int global;
+
+/* Simple thread Body */
+void *thread_body(void *data)
+{
+	int i = 0, j = 0;
+	int my_data = *((int *)data);
+	
+	for(j = 0; j < my_data; j++)
+	{
+		/* Locking mutex */
+		if((i = pthread_mutex_lock(&mutex)) != 0)
+		{
+			printf("pthread_mutex_lock() error\n");
+			exit(-1);
+		}
+		
+		/* Here we have exclusive access to "global" variable */
+		global = my_data;
+		printf("Child thread setting global variable to passed value. Value: %d. Global Variable: %d\n", my_data, global);
+		
+		/* Unlocking mutex */
+		if((i = pthread_mutex_unlock(&mutex)) != 0)
+		{
+			printf("pthread_mutex_unlock() error\n");
+			exit(-1);
+		}
+	}
+		
+	/* Exiting with return value */
+	pthread_exit((void *)&i);
+}
+
+int main(void)
+{
+	pthread_t t; /* Thread handler */
+	int i, j;
+	int data = 10;
+	int *ret;
+
+	/* New thread */
+	if((i = pthread_create(&t, NULL, thread_body, (void *)&data)) != 0)
+	{
+		printf("pthread_create() error\n");
+		exit(-1);
+	}
+	
+	/* Giving our thread some time ... */
+	for(j = 0; j < data; j++)
+	{
+		/* Locking mutex */
+		if((i = pthread_mutex_lock(&mutex)) != 0)
+		{
+			printf("pthread_mutex_lock() error\n");
+			exit(-1);
+		}
+		
+		/* Here we have exclusive access to "global" variable */
+		global = j * data;
+		printf("Main thread setting global variable to passed value. Global Variable: %d\n", global);
+		
+		/* Unlocking mutex */
+		if((i = pthread_mutex_unlock(&mutex)) != 0)
+		{
+			printf("pthread_mutex_unlock() error\n");
+			exit(-1);
+		}	
+	}
+
+	/* "Joining" our already exited thread */
+	if((i = pthread_join(t, (void *)&ret)) != 0)
+	{
+		printf("pthread_join() error\n");
+		exit(-1);
+	}	
+
+	/* Destroying the mutex */
+	if((i = pthread_mutex_destroy(&mutex)) != 0)
+	{
+		printf("pthread_mutex_destroy() error\n");
+		exit(-1);
+	}
+	
+	return 0;
+}
+
+
+          Thread Syncronization with Mutexes and Condition Variables
+
+Example Code from
+http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+pthread_mutex_t count_mutex     = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t condition_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t  condition_cond  = PTHREAD_COND_INITIALIZER;
+
+int  count = 0;
+
+#define COUNT_DONE  10
+#define COUNT_HALT1  3
+#define COUNT_HALT2  6
+
+void *functionCount1()
+{
+	for(;;)
+	{
+		pthread_mutex_lock( &condition_mutex );
+		while( count >= COUNT_HALT1 && count <= COUNT_HALT2 )
+		{
+			pthread_cond_wait( &condition_cond, &condition_mutex );
+		}
+		pthread_mutex_unlock( &condition_mutex );
+	
+		pthread_mutex_lock( &count_mutex );
+		count++;
+		printf("Counter value functionCount1: %d\n",count);
+		pthread_mutex_unlock( &count_mutex );
+	
+		if(count >= COUNT_DONE) return(NULL);
+	}
+}
+
+void *functionCount2()
+{
+	for(;;)
+	{
+		pthread_mutex_lock( &condition_mutex );
+		if( count < COUNT_HALT1 || count > COUNT_HALT2 )
+		{
+			pthread_cond_signal( &condition_cond );
+		}
+		pthread_mutex_unlock( &condition_mutex );
+
+		pthread_mutex_lock( &count_mutex );
+		count++;
+		printf("Counter value functionCount2: %d\n",count);
+		pthread_mutex_unlock( &count_mutex );
+	
+		if(count >= COUNT_DONE) return(NULL);
+	}
+}
+
+int main(void)
+{
+	pthread_t thread1, thread2;
+	
+	pthread_create( &thread1, NULL, &functionCount1, NULL);
+	pthread_create( &thread2, NULL, &functionCount2, NULL);
+	pthread_join( thread1, NULL);
+	pthread_join( thread2, NULL); 
+
+	return 0;
+}
+
+
+          Additional Documentation and tutorials
+
+http://users.actcom.co.il/~choo/lupg/tutorials/multi-thread/multi-thread.html
+http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
+
+
+      Sockets
+
+
+      Conversions
+
+
+        Integer to bitstring </wiki/String>
+
+ /* caveat: s must point to at least
+  * (CHAR_BIT * sizeof (unsigned) + 1) chars of storage
+  */
+ void sprintb(char *s, unsigned n) {
+     unsigned mask = ~(~0u >> 1);
+
+     while (mask) {
+         *s++ = n & mask ? '1' : '0';
+         mask >>= 1;
+     } 
+     *s = '\0'; 
+ }
+
+
+        Detecting data format problems with strtol </wiki/Converting>
+
+[this taken from channel chat -- 'cause i'm feeling lazy]
+
+js_      | is there a way to check if strtol has set errno or not? 
+         | i can't trust that it fails when it returns 0
+Alipha   | js_: strtol has a second parameter for a reason
+js_      | Alipha: oh
+twkm     | js_: and remember that only specific errno's mean something, 
+         | others may be just incidental to the process of conversion.
+infobahn | js_: errno = 0; n = strtol(buf, &endptr, base); if(errno == ERANGE) 
+         | { overflow or underflow } else if(endptr == buf) { no characters were 
+         | converted } else if(*endptr == '\0') { ALL characters were converted } 
+         | else { some characters were converted }
+js_      | ahh, wonderful
+Alipha   | if you strictly want to check for success, if(*endptr == '\0') { } 
+         | would be sufficient. however, it would complicate things if "235 " also 
+         | is acceptable or whatnot
+
+
+        How much room do I need?
+
+The two main tricks used to calculate maximum size needed to store an
+integer are:
+
+/* gives max size for a base 2 representation, including NIL byte */
+#define BASE2_INT_SZ() ((sizeof(unsigned int) * CHAR_BIT) + 1)
+
+/* do the same for base 8 (octal), including NIL and fractions */
+#define BASE8_INT_SZ() ((BASE2_INT_SZ() + 1) / 3 + 1)
+
+...note that this assumes "unsigned int" and "int" are the same size (if
+int is bigger to hold the minus, then you'll need an extra +1 in both to
+hold the minus sign on output -- however this would be *very uncommon*).
+
+If it's not obvious, it is well known that the space required for base
+X, is always enough space for the same number in base > X. So either of
+the above will provide more space than needed for base 10 (decimal) or
+base 16 (hexidecimal) numbers in int.
+
+
+        More on this topic
+
+There's more on this topic in an expanded page: Converting
+</wiki/Converting>
+
+
+      Strings
+
+There is no string type in c, which means there are some issues. Some
+nice coverage of it on the Strings </wiki/Strings> page.
+
+Some potentially useful (very small) string management code is available
+in dho's SecString </wiki/SecString> API.
+
+
+      Debugging
+
+
+        Getting a backtrace on Linux
+
+       #ifdef HAVE_BACKTRACE
+       #include <execinfo.h>
+       
+       /************************************************************************************************
+        * i check for the backtrace_symbols function in my configure.ac with:
+        *    AC_CHECK_FUNC(backtrace_symbols, [AC_DEFINE(HAVE_BACKTRACE, 1, [backtrace_symbols check])])
+        ************************************************************************************************/
+       static void full_write(int fd, const char *buf, size_t len)
+       {
+         while (len > 0)
+         { /* loop until all of the write request is done */
+           ssize_t ret = write(fd, buf, len);
+    
+           if ((ret == -1) && (errno != EINTR))
+             /* error occured... */ abort();
+
+           buf += (size_t)ret;
+           len -= (size_t)ret;
+         }
+       }
+       
+       void print_backtrace(void)
+       {
+         const char start[] = "BACKTRACE ------------\n";
+         const char end[]   = "----------------------\n";
+       
+         void    *bt[128];
+         int     bt_size;
+         char    **bt_syms;
+         int     i;
+       
+         bt_size = backtrace(bt, 128);
+         bt_syms = backtrace_symbols(bt, bt_size);
+         full_write(STDERR_FILENO, start, strlen(start));
+         for(i = 1; i < bt_size; i++) {
+           size_t len = strlen(bt_syms[i]);
+           full_write(STDERR_FILENO, bt_syms[i], len);
+           full_write(STDERR_FILENO, "\n", 1);
+         }
+         full_write(STDERR_FILENO, end, strlen(end));
+       }
+       #endif
+
+
+      Preprocessor
+
+
+        Turning symbols into strings
+
+#define MAKE_STRING(x) #x
+
+Now MAKE_STRING(foo) expands to "foo"
+
+
+        CONCAT
+
+#define CONCAT(x,y) x##y
+
+Now CONCAT(foo,bar) expands to foobar
+
+
+        String concatination
+
+#define CONCAT(x,y) MAKE_STRING(x##y)
+
+Now CONCAT(foo,bar) expanded to "foobar"
+
+
+      Sharing values between translation units
+
+An object may be defined but once, so a naive attempt attempt to share
+objects between translation units by definition in a header file can
+result in failure, often with a message like 'multiple definition'. here
+is just such a naive example, which we will correct:
+
+ constants.h:
+
+   double pi = 3.1415;
+
+ foo.c:
+
+   #include "constants.h"
+
+   double foo(void) { return 2 * pi; }
+
+ bar.c:
+
+   #include "constants.h"
+
+   double bar(void) { return 3 * pi; }
+
+ main.c:
+
+   #include <stdio.h>
+
+   double foo(void);
+   double bar(void);
+
+   int main(void)
+   {
+     printf("%f\n", foo());
+     printf("%f\n", bar());
+     return 0;
+   }
+
+This can be made to work by replacing the definitions in the header file
+with references using extern to qualify the declaration. This yields
+something more like the following, in which i've also included
+header-guards so that multiple inclusion is benign and a header file for
+each translation unit with any identifier needed by another (i.e., foo.h
+and bar.h).
+
+ constants.h:
+
+   #ifndef CONSTANTS_H
+   #define CONSTANTS_H
+
+   extern double pi;
+
+   #endif
+
+ constants.c:
+
+   #include "constants.h"
+
+   double pi = 3.1415;
+
+ foo.h:
+
+   #ifndef FOO_H
+   #define FOO_H
+
+   double foo(void);
+
+   #endif
+
+ foo.c:
+
+   #include "foo.h"
+   #include "constants.h"
+
+   double foo(void) { return 2 * pi; }
+
+ bar.h:
+
+   #ifndef BAR_H
+   #define BAR_H
+
+   double bar(void);
+
+   #endif
+
+ bar.c:
+
+   #include "bar.h"
+   #include "constants.h"
+
+   double bar(void) { return 3 * pi; }
+
+ main.c:
+
+   #include <stdio.h>
+
+   #include "foo.h"
+   #include "bar.h"
+
+   int main(void)
+   {
+     printf("%f\n", foo());
+     printf("%f\n", bar());
+     return 0;
+   }
+
+
+      Allocating dynamic objects
+
+Does the following call correctly allocate a vector of 10 elements of
+the type of vec?
+
+vec = malloc(10 * sizeof(struct elem));
+
+Only if vec really is a struct elem pointer. Even if it is correct, what
+if the declaration of vec is changed to the following?
+
+struct node *vec;
+
+Now, the above malloc() call is no longer correct and must be changed as
+well. In fact, all such instances of the sizeof operator with respect to
+the vec variable must be changed.
+
+However, the following call is correct, regardless of the type of vec
+and remains correct through type changes.
+
+vec = malloc(10 * sizeof *vec);
+
+Rules of thumb for some type T and some size N:
+
+T *vec;
+vec = malloc(N * sizeof *vec);
+
+T *obj;
+obj = malloc(sizeof *obj);
+
+char *str;
+str = malloc(N);
+
+
+      Sleeping
+
+If you wish to sleep for less than one second (as sleep(3) would provide
+from POSIX's unistd.h), and your system does not provide usleep(3), you
+may be able to use select(2) instead:
+
+{
+    struct timeval tv = { 0, n };
+    select(0, 0, 0, 0, &tv);
+}
+
+Or with C99:
+
+select(0, 0, 0, 0, & (struct timeval) { .tv_usec = n });
+
+(Gleefully borrowed from Peter Seebach's Open source development using
+C99 <http://www-128.ibm.com/developerworks/linux/library/l-c99.html>
+article).
+
+
+      Copy a substring
+
+char *substr(char *dst, const char *src, size_t len)
+{
+  sprintf(dst, "%.*s", len, src);
+  return dst;
+}
+
+
+      File* IO on large files (posix only)
+
+#define _POSIX_C_SOURCE 1
+#define _FILE_OFFSET_BITS 64
+
+/* on linux gcc this is sometimes needed although it probably should not be */
+#define _GNU_SOURCE
+
+/* open the file as normal with fopen */
+FILE *file = fopen(fname, "r");
+if (file == NULL) { /* error message */ }
+
+/* seek with fseeko */
+
+off_t pos = 42;
+if (fseeko(file,pos,SEEK_SET) == -1) { /* error message */ }
+
+/* get position with ftello */
+pos = ftello(file);
+if (pos==-1) { /* error message */ }
+
+/* read as normal */
+
+/* close as normal */
+if (fclose(file) == -1) { /* error message */ }
+
+
+      Term[win] Dimensions
+
+#include <sys/ioctl.h> 
+#include <string.h> 
+#include <errno.h> 
+#include <stdlib.h> 
+#include <stdio.h> 
+
+int main(int argc,char **argv) 
+{ struct winsize ws; 
+
+    if (ioctl(0,TIOCGWINSZ,&ws)!=0)
+    { 
+        fprintf(stderr,"TIOCGWINSZ:%s\n",strerror(errno)); 
+        exit(1); 
+    } 
+    printf("row=%d, col=%d, xpixel=%d, ypixel=%d\n", 
+        ws.ws_row,ws.ws_col,ws.ws_xpixel,ws.ws_ypixel); 
+
+    return 0; 
+}
+
+
+------------------------------------------------------------------------
+
+Category Snippets </wiki/Category_Snippets>
+
+Retrieved from "http://www.iso-9899.info/wiki/Snippets"
+
+
+          Views
+
+  * Article </wiki/Snippets>
+  * Discussion </wiki/Talk:Snippets>
+  * View source </wiki?title=Snippets&action=edit>
+  * History </wiki?title=Snippets&action=history>
+
+
+          Personal tools
+
+  * Log in </wiki?title=Special:Userlogin&returnto=Snippets>
+
+</wiki/Main_Page>
+
+
+          Navigation
+
+  * Main Page </wiki/Main_Page>
+  * Community portal </wiki/C:Community_Portal>
+  * Current events </wiki/Current_events>
+  * Recent changes </wiki/Special:Recentchanges>
+  * Random page </wiki/Special:Random>
+  * Help </wiki/Help:Contents>
+
+
+          Search
+
+ 
+
+
+          Toolbox
+
+  * What links here </wiki/Special:Whatlinkshere/Snippets>
+  * Related changes </wiki/Special:Recentchangeslinked/Snippets>
+  * Special pages </wiki/Special:Specialpages>
+  * Printable version </wiki?title=Snippets&printable=yes>
+  * Permanent link </wiki?title=Snippets&oldid=8769>
+
+Powered by MediaWiki <http://www.mediawiki.org/>
+
+  * This page was last modified 00:44, 6 June 2012.
+  * This page has been accessed 27,072 times.
+  * Privacy policy </wiki/C:Privacy_policy>
+  * About C </wiki/C:About>
+  * Disclaimers </wiki/C:General_disclaimer>
+

@@ -1,0 +1,4 @@
+#include "getline.h"
+
+/* read a line into s. return length */
+int fold(char s[], int len);
