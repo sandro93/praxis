@@ -39,3 +39,5 @@
   `(div ((class "posts"))
         ,@(map render-post a-blog)))
 
+(define (average lst)
+  (/ (apply + lst) (count lst)))

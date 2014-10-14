@@ -16,8 +16,8 @@ int readline(char s[], int len){
 
 int findblnk(char s[], int start, int n){
   int pos = -1;
-  
-  /* if searching backwards, move cursor to the last character before '\0' */
+  /* if searching backwards, move cursor to the last character before
+     '\0' */
   if(n < 0){
     if(s[start] == '\0'){
       --start;
@@ -26,7 +26,8 @@ int findblnk(char s[], int start, int n){
       --start;
     }
   }else{
-    /* correct improper start, but leave it as it is if searching backwards */
+    /* correct improper start, but leave it as it is if searching
+       backwards */
     if(start < 0){
       start = 0;
     }
