@@ -1,0 +1,13 @@
+;; Object raad
+;; EDE Project Files are auto generated: Do Not Edit
+(ede-proj-project "raad"
+  :file "Project.ede"
+  :name "raad"
+  :targets (list 
+   (ede-proj-target-makefile-program "gnu"
+    :name "gnu"
+    :path ""
+    :source '("raad.h")
+    )
+   )
+  )

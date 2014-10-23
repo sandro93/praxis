@@ -36,12 +36,12 @@ void addBullet(float x, float y, float dx){
   }
     
   if(found >= 0){
-    int i = found;
-    bullets[i] = malloc(sizeof(Bullet));
-    bullets[i]->x = x;
-    bullets[i]->y = y;
-    bullets[i]->dx = dx;    
-  }
+      int i = found;
+      bullets[i] = malloc(sizeof(Bullet));
+      bullets[i]->x = x;
+      bullets[i]->y = y;
+      bullets[i]->dx = dx;    
+    }
 }
 
 void removeBullet(int i){
@@ -118,41 +118,50 @@ int processEvents(SDL_Window *window, Man *man)
       man->walking = 0;
       man->currentSprite = 4;
     }
-  if(!man->walking){
-      if(state[SDL_SCANCODE_SPACE])// && !man->dy){
-	  if(globalTime % 6 == 0){
+  if(!man->walking)
+    {
+      if(state[SDL_SCANCODE_SPACE])// && !man->dy)
+	{
+	  if(globalTime % 6 == 0)
+	    {
 	      if(man->currentSprite == 4)         
 		man->currentSprite = 5;
 	      else
 		man->currentSprite = 4;
           
-	      if(!man->facingLeft){
+	      if(!man->facingLeft)
+		{
 		  addBullet(man->x+35, man->y+20, 3); 
 		}
-	      else{
+	      else
+		{
 		  addBullet(man->x+5, man->y+20, -3);         
 		}
 	    }  
   
 	  man->shooting = 1;
 	}
-      else {
+      else 
+	{
 	  man->currentSprite = 4;  
 	  man->shooting = 0;
 	}
     }
   
-  if(state[SDL_SCANCODE_UP] && !man->dy){
+  if(state[SDL_SCANCODE_UP] && !man->dy)
+    {
       man->dy = -8;
     }
-  if(state[SDL_SCANCODE_DOWN]){
+  if(state[SDL_SCANCODE_DOWN])
+    {
       //man->y += 10;
     }
   
   return done;
 }
 
-void doRender(SDL_Renderer *renderer, Man *man){
+void doRender(SDL_Renderer *renderer, Man *man)
+{
   //set the drawing color to blue
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
   
@@ -166,14 +175,16 @@ void doRender(SDL_Renderer *renderer, Man *man){
   SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
 
   //warrior
-  if(man->visible){
+  if(man->visible)
+    {
       SDL_Rect srcRect = { 40*man->currentSprite, 0, 40, 50 };  
       SDL_Rect rect = { man->x, man->y, 40, 50 };  
       SDL_RenderCopyEx(renderer, man->sheetTexture, &srcRect, &rect, 0, NULL, man->facingLeft);
     }
 
   //enemy
-  if(enemy.visible){
+  if(enemy.visible)
+    {
       SDL_Rect eSrcRect = { 40*enemy.currentSprite, 0, 40, 50 };  
       SDL_Rect eRect = { enemy.x, enemy.y, 40, 50 };  
       SDL_RenderCopyEx(renderer, enemy.sheetTexture, &eSrcRect, &eRect, 0, NULL, enemy.facingLeft);
@@ -192,7 +203,8 @@ void doRender(SDL_Renderer *renderer, Man *man){
 void updateLogic(Man *man){
   man->y += man->dy;
   man->dy += 0.5;
-  if(man->y > 60){
+  if(man->y > 60)
+    {
       man->y = 60;
       man->dy = 0;
     }
@@ -202,21 +214,24 @@ void updateLogic(Man *man){
     
       //simple coll. detection
       if(bullets[i]->x > enemy.x && bullets[i]->x < enemy.x+40 && 
-	 bullets[i]->y > enemy.y && bullets[i]->y < enemy.y+50){
+	 bullets[i]->y > enemy.y && bullets[i]->y < enemy.y+50)
+	{
 	  enemy.alive = 0;
 	} 
     
-      if(bullets[i]->x < -1000 || bullets[i]->x > 1000){
+      if(bullets[i]->x < -1000 || bullets[i]->x > 1000)
 	removeBullet(i);
-      }
     }
   
-  if(enemy.alive == 0 && globalTime % 6 == 0){
-    if(enemy.currentSprite < 6){
+  if(enemy.alive == 0 && globalTime % 6 == 0)
+    {
+      if(enemy.currentSprite < 6)
 	enemy.currentSprite = 6;
-    }else if(enemy.currentSprite >= 6){
+      else if(enemy.currentSprite >= 6)
+	{
 	  enemy.currentSprite++;
-	  if(enemy.currentSprite > 7){
+	  if(enemy.currentSprite > 7)
+	    {
 	      enemy.visible = 0;
 	      enemy.currentSprite = 7;      
 	    }
@@ -226,7 +241,8 @@ void updateLogic(Man *man){
   globalTime++;
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
   SDL_Window *window;                    // Declare a window
   SDL_Renderer *renderer;                // Declare a renderer
   
@@ -261,17 +277,19 @@ int main(int argc, char *argv[]){
 
   
   SDL_Surface *sheet = IMG_Load("assets/sheet.png");
-  if(!sheet){
-    printf("Cannot find sheet: sheet.png\n");
-    return 1;
-  }
+  if(!sheet)
+    {
+      printf("Cannot find sheet: sheet.png\n");
+      return 1;
+    }
   
   man.sheetTexture = SDL_CreateTextureFromSurface(renderer, sheet);  
   SDL_FreeSurface(sheet);
   
   //load enemy
   sheet = IMG_Load("assets/badman_sheet.png");
-  if(!sheet){
+  if(!sheet)
+    {
       printf("Cannot find sheet: badman_sheet.png\n");
       return 1;
     }
@@ -282,7 +300,8 @@ int main(int argc, char *argv[]){
   //load the bg  
   SDL_Surface *bg = IMG_Load("assets/background.png");
   
-  if(!sheet){
+  if(!sheet)
+    {
       printf("Cannot find background\n");
       return 1;
     }
@@ -293,7 +312,8 @@ int main(int argc, char *argv[]){
   //load the bullet  
   SDL_Surface *bullet = IMG_Load("assets/bullet.png");
   
-  if(!bullet){
+  if(!bullet)
+    {
       printf("Cannot find bullet\n");
       return 1;
     }
@@ -305,7 +325,8 @@ int main(int argc, char *argv[]){
   int done = 0;
   
   //Event loop
-  while(!done){
+  while(!done)
+    {
       //Check for events
       done = processEvents(window, &man);
     
@@ -329,9 +350,8 @@ int main(int argc, char *argv[]){
   SDL_DestroyTexture(enemy.sheetTexture);
   
   int i;
-  for(i = 0; i < MAX_BULLETS; i++){
+  for(i = 0; i < MAX_BULLETS; i++)
     removeBullet(i);
-  }
   
   // Clean up
   SDL_Quit();

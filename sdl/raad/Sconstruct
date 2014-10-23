@@ -1,0 +1,4 @@
+wflags = '-Wall -Wextra -Wstrict-prototypes -Wshadow -Wwrite-strings -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs'
+ccflags = '-I/usr/include/SDL2 -D_REENTRANT -L/usr/lib -p -g ' + wflags
+env = Environment(cc = 'gcc', CCFLAGS = ccflags)
+env.Program(["raad.c", "bullet.c", "texture.c", "vector.c"], LIBS=['SDL2', 'SDL2_image', 'm', 'pthread'])

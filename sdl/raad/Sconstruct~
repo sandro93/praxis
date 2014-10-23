@@ -1,0 +1,2 @@
+env = Environment(cc = 'gcc', CCFLAGS = '')
+env.Program(["raad.c", "bullet.c", "texture.c", "vector.c"], LIBS=['SDL2', 'SDL2_image', 'm'])

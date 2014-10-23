@@ -8,6 +8,7 @@
 #include "raven.h"
 #include "vector.h"
 #include "texture.h"
+#include "ledge.h"
 
 typedef struct{
   Vector position;
@@ -21,9 +22,11 @@ typedef struct{
 
 typedef struct{
   Runner man;
+  Raven ravens[20];
+  Ledge ledges[100];
   SDL_Texture *raven;
   SDL_Texture *brick;
-  Raven ravens[20];
+
   SDL_Renderer *renderer;
 } GameState;
 

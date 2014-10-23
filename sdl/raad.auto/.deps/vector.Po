@@ -1,0 +1,5 @@
+vector.o: vector.c /usr/include/stdc-predef.h vector.h
+
+/usr/include/stdc-predef.h:
+
+vector.h:

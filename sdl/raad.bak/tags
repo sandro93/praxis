@@ -1,0 +1,44 @@
+GameState	raad.h	31
+Ledge	ledge.h	6
+Mraad	raad.c	/^int main(int argc, char *argv[]){$/
+Raven	raven.h	4
+Runner	raad.h	21
+Vector	vector.h	6
+WINDOW_HEIGHT	raad.c	5
+WINDOW_TITLE	raad.c	3
+WINDOW_WIDTH	raad.c	4
+acceleration	raad.h	16
+add	vector.c	/^Vector add(Vector v1, Vector v2){$/
+brick	raad.h	28
+currentFrame	raad.h	18
+currentRow	raad.h	19
+divideByScalar	vector.c	/^Vector divideByScalar(Vector v, float scalar){$/
+drawTexture	texture.c	/^void drawTexture(SDL_Texture* texture, int x, int /
+drawTextureFrame	texture.c	/^void drawTextureFrame(SDL_Texture* texture, int x,/
+h	ledge.h	5
+handleEvents	raad.c	/^void handleEvents(GameState *game){$/
+help	raad.c	9
+ledges	raad.h	26
+length	vector.h	/^#define length(v) (sqrt(v.x * v.x + v.y * v.y))$/
+life	raad.h	17
+loadGame	raad.c	/^void loadGame(GameState *game){$/
+loadTexture	texture.c	/^int loadTexture(const char* filename, $/
+man	raad.h	24
+multByScalar	vector.c	/^Vector multByScalar(Vector v, float scalar){$/
+normalize	vector.c	/^Vector normalize(Vector v){$/
+position	raad.h	14
+raven	raad.h	27
+ravens	raad.h	25
+render	raad.c	/^void render(GameState *game){$/
+renderer	raad.h	30
+running	raad.c	7
+subtract	vector.c	/^Vector subtract(Vector v1, Vector v2){$/
+texture	raad.h	20
+velocity	raad.h	15
+w	ledge.h	4
+x	ledge.h	2
+x	raven.h	2
+x	vector.h	4
+y	ledge.h	3
+y	raven.h	3
+y	vector.h	5
