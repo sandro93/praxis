@@ -224,20 +224,20 @@
 (define (render-pit w)
   (snake+scene (pit-snake w)
 	       (goo-list+scene (pit-goos w) MT-SCENE)))
-  
+#|  
 (define (render-end w)
   (define snake (pit-snake w))
-  (overlay (text "Game Over\n\n" ENDGAME-TEXT-SIZE "black")
-	   (text "Your Score\n " 30 "black")
-	   (text (number->string (length (snake-body snake))) 30 "green")
-	   (render-pit w)))
+  (overlay (text "Game Over" ENDGAME-TEXT-SIZE "black")
+	   (text "Your Score" 30, "black")
+	   (text (length (snake-body snake) 30, "green"))
+	   (render-snake-world w)))
+|#
 
-#|
 (define (render-end w)
   (overlay
    (text "Game Over" ENDGAME-TEXT-SIZE "black")
    (render-pit w)))
-|#
+
 #|
 ;; Tests
   
