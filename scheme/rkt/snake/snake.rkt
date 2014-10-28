@@ -6,7 +6,7 @@
 
 (struct posn (x y))
 (struct snake (heading segs))
-(struct goo (loc expire))
+(struct goo (loc expire kind))
 (struct pit (snake goos))
 
 ;; Constants 
@@ -19,6 +19,8 @@
 
 ;; Goo constants
 (define EXPIRATION-TIME 150)
+(define GOO-KIND-NORMAL 1)
+(define GOO-KIND-MEGA 2)
 (define MAX-GOO 5)
 
 ;; Graphical board
@@ -27,7 +29,8 @@
 
 ;; Visual constants
 (define MT-SCENE (empty-scene WIDTH-PX HEIGHT-PX))
-(define GOO-IMG (bitmap "graphics/goo.gif"))
+(define GOO-IMG (bitmap "graphics/goo.png"))
+(define MEGA-GOO-IMG (bitmap "graphics/goo_mega.png"))
 (define SEG-IMG (bitmap "graphics/body.gif"))
 (define HEAD-IMG (bitmap "graphics/head.gif"))
 
@@ -66,7 +69,9 @@
   (define goos (pit-goos w))
   (define goo-to-eat (can-eat snake goos))
   (if goo-to-eat
-    (pit (grow snake) (age-goo (eat goo-to-eat goos)))
+    (if (= (goo-kind goo-to-eat) GOO-KIND-NORMAL)
+        (pit (grow snake) (age-goo (eat goo-to-eat goos)))
+        (pit (grow (grow snake)) (age-goo (eat goo-to-eat goos))))
     (pit (slither snake) (age-goo goos))))
 
 ;; Pit KeyEvent -> Pit
@@ -95,11 +100,10 @@
   (zero? (goo-expire g)))
 
 (define (decay g)
-  (goo (goo-loc g) (sub1 (goo-expire g))))
+  (goo (goo-loc g) (sub1 (goo-expire g)) (goo-kind g)))
 
 (define (rot goos)
-  (cond [(empty? goos) empty]
-	[else (cons (decay (car goos)) (rot (cdr goos)))]))
+	(map decay goos))	
 
 (define (renew goos)
   (cond [(empty? goos) empty]
@@ -111,7 +115,9 @@
 (define (fresh-goo)
   (goo (posn (add1 (random (sub1 SIZE)))
 	     (add1 (random (sub1 SIZE))))
-       (add1 (random EXPIRATION-TIME))))
+       (add1 (random EXPIRATION-TIME))
+       (add1 (random 2))))
+
 
 (define (dir? x)
   (or (key=? x "up")
@@ -216,10 +222,14 @@
 	     snake-body-scene))
 
 (define (goo-list+scene goos scene)
-  (define (get-posns-from-goo goos)
-    (cond [(empty? goos) empty]
-	  [else (cons (goo-loc (car goos)) (get-posns-from-goo (cdr goos)))]))
-  (img-list+scene (get-posns-from-goo goos) GOO-IMG scene))
+  (cond [(empty? goos) scene]
+	[else
+ 	 (define goo (car goos))  
+  		(img+scene
+		(goo-loc goo)
+		(cond [(= (goo-kind goo) GOO-KIND-NORMAL) GOO-IMG]
+		      [else MEGA-GOO-IMG])
+		(goo-list+scene (cdr goos) scene))]))
 
 (define (render-pit w)
   (snake+scene (pit-snake w)
@@ -231,13 +241,7 @@
 	   (text "Your Score\n " 30 "black")
 	   (text (number->string (length (snake-body snake))) 30 "green")
 	   (render-pit w)))
-
-#|
-(define (render-end w)
-  (overlay
-   (text "Game Over" ENDGAME-TEXT-SIZE "black")
-   (render-pit w)))
-|#
+(start-snake)
 #|
 ;; Tests
   
