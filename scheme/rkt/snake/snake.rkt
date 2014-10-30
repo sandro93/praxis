@@ -106,11 +106,6 @@
 	[else
 	  (pit (snake-change-dir the-snake d) (pit-goos w))]))
 
-(define (posn-mv p dx dy)
-  (posn (+ (posn-x p) dx)
-	(+ (posn-y p) dy)))
-
-
 (define (can-eat snake goos)
   (cond [(empty? goos) #f]
 	[else (if (close? (snake-head snake) (car goos))
