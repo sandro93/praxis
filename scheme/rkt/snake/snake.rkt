@@ -1,26 +1,19 @@
 #lang racket
 
 (require 2htdp/image 2htdp/universe)
+(require "goo.rkt" "posn.rkt" "defs.rkt")
 
 ;; Data definitions
 
-(struct posn (x y))
 (struct snake (heading segs))
-(struct goo (loc expire kind))
 (struct pit (snake goos))
 
 ;; Constants 
 (define TICK-RATE 1/10)
-(define SIZE 30)
 
 ;; Snake constansts
 (define SEG-SIZE 15)
 
-;; Goo constants
-(define EXPIRATION-TIME 150)
-(define GOO-KIND-NORMAL 1)
-(define GOO-KIND-MEGA 2)
-(define MAX-GOO 5)
 
 ;; Graphical board
 (define WIDTH-PX (* SEG-SIZE 30))
@@ -28,11 +21,8 @@
 
 ;; Visual constants
 (define MT-SCENE (empty-scene WIDTH-PX HEIGHT-PX))
-(define GOO-IMG (bitmap "graphics/goo.png"))
-(define MEGA-GOO-IMG (bitmap "graphics/goo_mega.png"))
 (define SEG-IMG (bitmap "graphics/body.gif"))
 (define HEAD-IMG (bitmap "graphics/head.gif"))
-
 (define HEAD-LEFT-IMG HEAD-IMG)
 (define HEAD-DOWN-IMG (rotate 90 HEAD-LEFT-IMG))
 (define HEAD-RIGHT-IMG (flip-horizontal HEAD-LEFT-IMG))
@@ -40,10 +30,10 @@
 
 (define ENDGAME-TEXT-SIZE 35)
 
-;(define KEY-UP "up")
-;(define KEY-RIGHT "right")
-;(define KEY-DOWN "down")
-;(define KEY-LEFT "left")
+(define KEY-UP "up")
+(define KEY-RIGHT "right")
+(define KEY-DOWN "down")
+(define KEY-LEFT "left")
 
 ;; main function
 
@@ -95,34 +85,11 @@
 (define (snake-change-dir sn d)
   (snake d (snake-segs sn)))
 
-(define (rotten? g)
-  (zero? (goo-expire g)))
-
-(define (decay g)
-  (goo (goo-loc g) (sub1 (goo-expire g)) (goo-kind g)))
-
-(define (rot goos)
-	(map decay goos))	
-
-(define (renew goos)
-  (cond [(empty? goos) empty]
-	[(rotten? (car goos))
-	 (cons (fresh-goo) (renew (cdr goos)))]
-	[else
-	  (cons (first goos) (renew (cdr goos)))]))
-
-(define (fresh-goo)
-  (goo (posn (add1 (random (sub1 SIZE)))
-	     (add1 (random (sub1 SIZE))))
-       (add1 (random EXPIRATION-TIME))
-       (add1 (random 2))))
-
-
 (define (dir? x)
-  (or (key=? x "up")
-      (key=? x "right")
-      (key=? x "down")
-      (key=? x "left")))
+  (or (key=? x KEY-UP)
+      (key=? x KEY-RIGHT)
+      (key=? x KEY-DOWN)
+      (key=? x KEY-LEFT)))
 
 (define (opposite-dir? d1 d2)
   (cond [(string=? d1 "up") (string=? d2 "down")]
@@ -138,10 +105,6 @@
 	 (stop-with w)]
 	[else
 	  (pit (snake-change-dir the-snake d) (pit-goos w))]))
-
-
-(define (age-goo goos)
-  (rot (renew goos)))
 
 (define (posn-mv p dx dy)
   (posn (+ (posn-x p) dx)
@@ -237,8 +200,8 @@
 (define (render-end w)
   (define snake (pit-snake w))
   (overlay (above (text "Game Over" ENDGAME-TEXT-SIZE "black")
-             (beside (text "Your Score " 30 "black")
-	   (text (number->string (length (snake-body snake))) 30 "green")))
+             (beside (text "Your Score " ENDGAME-TEXT-SIZE "black")
+	   (text (number->string (length (snake-body snake))) ENDGAME-TEXT-SIZE "green")))
 	   (render-pit w)))
 (start-snake)
 #|

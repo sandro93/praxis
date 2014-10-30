@@ -1,0 +1,1 @@
+("6.1" ("210207b55dea02a04589faa04ff72c5507844788" . "654f7ff3c094d419aca5dbdbe2b235972c6bdd5e") (collects #"errortrace" #"errortrace-key.rkt") #"/home/sergi/learning/scheme/rkt/snake/posn.rkt" (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") #"/home/sergi/learning/scheme/rkt/snake/defs.rkt" (collects #"2htdp" #"image.rkt"))
