@@ -16,7 +16,6 @@
 ;; Snake constansts
 (define SEG-SIZE 15)
 
-
 ;; Goo constants
 (define EXPIRATION-TIME 150)
 (define GOO-KIND-NORMAL 1)
@@ -237,9 +236,9 @@
   
 (define (render-end w)
   (define snake (pit-snake w))
-  (overlay (text "Game Over\n\n" ENDGAME-TEXT-SIZE "black")
-	   (text "Your Score\n " 30 "black")
-	   (text (number->string (length (snake-body snake))) 30 "green")
+  (overlay (above (text "Game Over" ENDGAME-TEXT-SIZE "black")
+             (beside (text "Your Score " 30 "black")
+	   (text (number->string (length (snake-body snake))) 30 "green")))
 	   (render-pit w)))
 (start-snake)
 #|
