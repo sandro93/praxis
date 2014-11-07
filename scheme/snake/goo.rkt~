@@ -21,14 +21,8 @@
 (define (decay g)
   (goo (goo-loc g) (sub1 (goo-expire g)) (goo-kind g)))
 
-#| 
 (define (rot goos)
-	(map (lambda (g)
-               (goo (goo-loc g) (sub1 (goo-expire g))))
-               goos))
-|#
-(define (rot goos)
-  (map decay goos))
+	(map decay goos))	
 
 (define (renew goos)
   (cond [(empty? goos) empty]
@@ -37,10 +31,6 @@
 	[else
 	  (cons (first goos) (renew (cdr goos)))]))
 
-#|
-(define (renew goos)
-  (filter (lambda (g) (not (rotten? g))) goos))
-|#
 (define (fresh-goo)
   (goo (posn (add1 (random (sub1 SIZE)))
 	     (add1 (random (sub1 SIZE))))

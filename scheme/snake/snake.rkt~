@@ -40,7 +40,10 @@
 ;; Start the Game
 (define (start-snake)
   (big-bang (pit (snake "right" (list (posn 1 1)))
-                 (list (make-obstacle))
+                 (list (make-obstacle)
+                       (make-obstacle)
+                       (make-obstacle)
+                       (make-obstacle))
                  (list (fresh-goo)
                        (fresh-goo)
                        (fresh-goo)
@@ -155,7 +158,7 @@
 (define (dead? w)
   (define snake (pit-snake w))
   (define obstacles (pit-obstacles w))
-  (or (self-colliding? snake) (wall-colliding? snake) (obstacle-colliding? snake obstacles)))
+  (or (self-colliding? snake) (wall-colliding? snake)) (obstacle-colliding? snake obstacles))
 
 ; render functioons
 (define (img+scene posn img scene)
@@ -164,19 +167,13 @@
 	       (* (posn-y posn) SEG-SIZE)
 	       scene))
 
-#|
 (define (img-list+scene posns img scene)
   (cond [(empty? posns) scene]
 	[else (img+scene
 		(car posns)
 		img
 		(img-list+scene (cdr posns) img scene))]))
-|#
 
-(define (img-list+scene posns img scene)
-  (foldr (lambda (p s) (img+scene p img s)) scene posns))
-  
-  
 (define (snake+scene snake scene)
   (define snake-body-scene
     (img-list+scene (snake-body snake) SEG-IMG scene))

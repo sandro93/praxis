@@ -1,0 +1,6 @@
+#lang racket
+
+(define (d/dx f)
+  (define d (/ 100000))
+  (lambda (x)
+    (/ (- (fun (+ x d)) (fun (- x d))) 2 d)))
