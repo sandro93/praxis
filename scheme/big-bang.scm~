@@ -1,0 +1,7 @@
+#lang racket
+
+(require 2htdp/universe)
+
+(big-bang 100
+	(on-tick sub1)
+	(stop-when zero?))
